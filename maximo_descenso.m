@@ -8,7 +8,7 @@ function [ xf, z, m, time ] = maximo_descenso( f, x0, eps, n )
         gradient_f = eval(subs(jacobian(f),argnames(f),x0));
         k=k+1;
     end
-    time=toc-tic;
+    time=toc;
     xf = x0 ;
     z = eval(subs(f,argnames(f),x0));
     m = k ;
