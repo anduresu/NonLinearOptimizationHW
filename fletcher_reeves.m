@@ -1,27 +1,24 @@
-function [ xf, z, m, t ] = fletcher_reeves( f, x0, eps, n )
+function [ xf, z , m , time] = fletcher_reeves( f, x0, eps, n )
     tic ;
     k = 0 ;
-    d0 = -eval(subs(gradient(f),argnames(f),x0)) 
-    x0
-    x1 = x0 + paso(f,x0)*d0.' 
-    while ( norm(x1-x0) > eps || k <= n )
-    	grad0 = -eval(subs(gradient(f),argnames(f),x0)) 
-    	grad1 = -eval(subs(gradient(f),argnames(f),x1))  
-        num = ((grad1-grad0).')*(grad1) 
-        div = (grad0.')*(grad0)
-    	rho = num/div  
-    	d1 = grad1 + (rho*d0) ; 
-        k = k+1 ; 
+    d = -eval(subs(jacobian(f),argnames(f),x0)) ; 
+    x1 = x0 + paso(f,x0)*d ;
+    dif = 1 ;
+    while ( dif > -eps && norm(x1-x0) > eps && k <= n )
+        grad0 = eval(subs(jacobian(f),argnames(f),x0));
+        grad1 = eval(subs(jacobian(f),argnames(f),x1)) ;
+        rho = ( (grad1.')*(grad1) )./( (grad0.')*(grad0) ) ;
+        d = -grad1 + (rho*d.').' ;
+        k = k+1 ;
         x0 = x1 ;
-        x1 = x0 + paso(f,x0)*d0.' 
-        d0 = d1 
-        
+        x1 = x0 + paso(f,x0)*d 
+        dif = eval(subs(f,argnames(f),x0)) - eval(subs(f,argnames(f),x1))  
+        z = eval(subs(f,argnames(f),x0) ) 
     end
-    toc 
-   	t = toc-tic ;
-   	xf = x1 ;
-   	z = feval(f,x1) ;
-   	m = k ;
+    time = toc ;
+    xf = x0 ;
+    z = eval(subs(f,argnames(f),x0)) ;
+    m = k ;
 
 end
 
