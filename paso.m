@@ -9,7 +9,7 @@ function [alpha]=paso(f,x0)
     fnormal=eval(subs(f,argnames(f),x0));
     fcorrida = eval(subs(f,argnames(f),x0+a*d));
     %iteracion
-    while (fcorrida-fnormal)/a > sigma*g'*d
+    while (fcorrida-fnormal)/a > sigma*g*d'
         a = a*beta;
         fnormal=eval(subs(f,argnames(f),x0));
         fcorrida = eval(subs(f,argnames(f),x0+a*d));
